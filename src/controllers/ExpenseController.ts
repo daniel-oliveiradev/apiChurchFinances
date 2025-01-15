@@ -6,14 +6,14 @@ interface expenseProps{
   description: string
   value: number
   dueDate: string
-  user_id: string
+  userId: string
 }
 
 export class expenseController{
   async create(request: FastifyRequest, reply: FastifyReply){
-    const { description, value, dueDate, user_id } = request.body as expenseProps
+    const { description, value, dueDate, userId } = request.body as expenseProps
 
-    if(!description || !value || !dueDate || !user_id){
+    if(!description || !value || !dueDate || !userId){
       throw new AppError("Preencha todos os campos.")
     }
 
@@ -22,7 +22,7 @@ export class expenseController{
         description,
         value,
         dueDate,
-        userId: user_id
+        userId
       }
     })
 
