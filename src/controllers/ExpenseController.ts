@@ -61,4 +61,20 @@ export class expenseController{
     
     return reply.send(expenseUpdated)
   }
+
+  async index(request: FastifyRequest, reply: FastifyReply){
+    const { userId } = request.params as expenseProps
+
+    const expenses = await prismaClient.expense.findMany({
+      where:{
+        userId
+      }
+    })
+
+    if(!expenses){
+      throw new AppError("Não há despesas cadastradas.")
+    }
+
+    return reply.send({ ...expenses })
+  }
 }

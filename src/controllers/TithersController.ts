@@ -4,7 +4,7 @@ import prismaClient from "../prisma";
 
 export  class titherController{ 
   async create(request: FastifyRequest, reply: FastifyReply){
-    const { name } = request.body as { name: string }
+    const { name, userId } = request.body as { name: string, userId: string }
 
     if(!name){
       throw new AppError("Campo nome vazio, favor fornecer um nome.")
@@ -12,7 +12,8 @@ export  class titherController{
 
     const tither = await prismaClient.tithers.create({
       data: {
-        name
+        name,
+        userId
       }
     })
 

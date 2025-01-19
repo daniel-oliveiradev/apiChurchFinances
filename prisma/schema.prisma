@@ -37,15 +37,14 @@ model Expense {
 }
 
 model Revenue {
-  id          String    @id @default(uuid())
+  id          String   @id @default(uuid())
   description String
   value       Float
   dueDate     String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now()) @updatedAt
-  User        User?     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  User        User?    @relation(fields: [userId], references: [id])
   userId      String?
-  tithers     Tithers[]
 
   @@map("revenue")
 }
@@ -57,8 +56,6 @@ model Tithers {
   updatedAt DateTime @default(now()) @updatedAt
   User      User?    @relation(fields: [userId], references: [id])
   userId    String?
-  Revenue   Revenue? @relation(fields: [revenueId], references: [id])
-  revenueId String?
 
   @@map("tithers")
 }

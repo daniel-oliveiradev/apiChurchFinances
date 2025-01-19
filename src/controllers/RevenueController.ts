@@ -14,7 +14,7 @@ interface revenueProps{
   async create(request: FastifyRequest, reply: FastifyReply){
     const { description, value, dueDate, userId } = request.body as revenueProps
 
-    if(!description || !value || !dueDate || !userId){
+    if(!description || !value || !dueDate ){
       throw new AppError("Preencha todos os campos.")
     }
 
@@ -55,10 +55,27 @@ interface revenueProps{
       data:{
         description:revenue.description,
         value:revenue.value,
-        dueDate:revenue.dueDate
+        dueDate:revenue.dueDate,
+        updatedAt: new Date()
       }
     })
 
     return reply.send(revenueUpdated)
+  }
+
+  async index(request:FastifyRequest, reply: FastifyReply){
+    const { userId } = request.params as revenueProps
+
+    const revenues = await prismaClient.revenue.findMany({
+      where:{
+        userId
+      }
+    })
+
+    if(!revenues){
+      throw new AppError("Não há receitas cadastradas")
+    }
+
+    return reply.send({ ...revenues })
   }
  }

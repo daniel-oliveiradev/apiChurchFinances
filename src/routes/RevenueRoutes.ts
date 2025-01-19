@@ -8,4 +8,7 @@ export async function revenueRoutes(fastify: FastifyInstance){
   fastify.put("/:id", (request: FastifyRequest, reply: FastifyReply) => {
     return new revenueController().update(request, reply)
   })
+  fastify.get("/:id", (request: FastifyRequest, reply: FastifyReply) => {
+    return new revenueController().index(request, reply)
+  })
 }

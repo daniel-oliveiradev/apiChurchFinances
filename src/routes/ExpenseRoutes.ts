@@ -8,4 +8,7 @@ export async function expenseRoutes(fastify: FastifyInstance){
   fastify.put("/:id", (request: FastifyRequest, reply: FastifyReply) => {
     return new expenseController().update(request, reply)
   })
+  fastify.get("/:id", (request: FastifyRequest, reply: FastifyReply) => {
+    return new expenseController().index(request, reply)
+  })
 }
