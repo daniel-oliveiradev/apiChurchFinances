@@ -5,4 +5,7 @@ export async function userRoutes(user: FastifyInstance){
   user.post("/", (request: FastifyRequest, reply: FastifyReply) => { 
     return new UserController().create(request, reply)
   })
+  user.put("/:id", (request: FastifyRequest, reply: FastifyReply) => { 
+    return new UserController().update(request, reply)
+  })
 }
