@@ -2,6 +2,7 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 
 import prismaClient from "../prisma";
 import { AppError } from "../utils/AppError";
+import { ensureAuthenticated } from "../middleware/ensureAuthenticated";
 
 interface revenueProps{
   description: string
@@ -12,7 +13,10 @@ interface revenueProps{
 
  export class revenueController{
   async create(request: FastifyRequest, reply: FastifyReply){
-    const { description, value, dueDate, userId } = request.body as revenueProps
+    await ensureAuthenticated(request)
+    
+    const userId = request.user.id
+    const { description, value, dueDate } = request.body as revenueProps
 
     if(!description || !value || !dueDate ){
       throw new AppError("Preencha todos os campos.")
@@ -31,11 +35,15 @@ interface revenueProps{
   }
 
   async update(request: FastifyRequest, reply: FastifyReply){
+    await ensureAuthenticated(request)
+    
+    const userId = request.user.id
     const { id } = request.params as { id: string }
     const { description, value, dueDate } = request.body as revenueProps
 
     const revenue = await prismaClient.revenue.findFirst({
       where:{
+        userId,
         id
       }
     })
@@ -64,7 +72,9 @@ interface revenueProps{
   }
 
   async index(request:FastifyRequest, reply: FastifyReply){
-    const { userId } = request.params as revenueProps
+    await ensureAuthenticated(request)
+    
+    const userId = request.user.id
 
     const revenues = await prismaClient.revenue.findMany({
       where:{
