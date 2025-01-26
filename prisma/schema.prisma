@@ -8,17 +8,19 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  name      String
-  email     String
-  password  String
-  nickname  String
-  isAdmin   Boolean   @default(false)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
-  expenses  Expense[]
-  revenues  Revenue[]
-  tithers   Tithers[]
+  id           String    @id @default(uuid())
+  name         String
+  email        String
+  password     String
+  nickname     String
+  isAdmin      Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt
+  validationId String?   @default(uuid())
+  isValidated  Boolean   @default(false)
+  expenses     Expense[]
+  revenues     Revenue[]
+  tithers      Tithers[]
 
   @@map("user")
 }
