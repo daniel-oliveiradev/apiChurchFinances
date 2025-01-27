@@ -10,14 +10,14 @@ datasource db {
 model User {
   id           String    @id @default(uuid())
   name         String
-  email        String
+  email        String    @unique
   password     String
-  nickname     String
+  nickname     String    @unique
   isAdmin      Boolean   @default(false)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @default(now()) @updatedAt
   validationId String?   @default(uuid())
-  isValidated  Boolean   @default(false)
+  isValidated  Boolean?  @default(false)
   expenses     Expense[]
   revenues     Revenue[]
   tithers      Tithers[]
