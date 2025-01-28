@@ -1,7 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import bcrypt from "bcryptjs"
 import * as nodemailer from "nodemailer"
-import { randomUUID } from "node:crypto";
 
 import { AppError } from "../utils/AppError"
 import prismaClient from "../prisma";
