@@ -192,8 +192,8 @@ export class UserController{
 
   async resetPassword(request: FastifyRequest, reply: FastifyReply){
     const { newPassword } = request.body as { newPassword: string }
-    const { userId } = request.params as { userId: string }
-
+    const { userId } = request.query as { userId: string }
+    
     const user = await prismaClient.user.findFirst({
       where:{
         id: userId
@@ -211,7 +211,7 @@ export class UserController{
         id: user.id
       },
       data:{
-        password: newPasswordHashed,
+        password: newPasswordHashed
       }
     })
 
