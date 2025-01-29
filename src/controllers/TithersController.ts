@@ -21,7 +21,7 @@ export  class titherController{
     })
 
     if(user?.isValidated === false){
-      throw new AppError("Conta sem confirmação de email.")
+      throw new AppError("Conta sem confirmação de email.", 401)
     }
 
 
@@ -53,7 +53,7 @@ export  class titherController{
     })
 
     if(user?.isValidated === false){
-      throw new AppError("Conta sem confirmação de email.")
+      throw new AppError("Conta sem confirmação de email.", 401)
     }
 
     const tither = await prismaClient.tithers.findFirst({
@@ -94,7 +94,7 @@ export  class titherController{
     })
 
     if(user?.isValidated === false){
-      throw new AppError("Conta sem confirmação de email.")
+      throw new AppError("Conta sem confirmação de email.", 401)
     }
 
     const tithers = await prismaClient.tithers.findMany({

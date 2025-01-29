@@ -28,7 +28,7 @@ export class expenseController{
     })
 
     if(user?.isValidated === false){
-      throw new AppError("Conta sem confirmação de email.")
+      throw new AppError("Conta sem confirmação de email.", 401)
     }
 
     const expense = await prismaClient.expense.create({
@@ -57,7 +57,7 @@ export class expenseController{
     })
 
     if(user?.isValidated === false){
-      throw new AppError("Conta sem confirmação de email.")
+      throw new AppError("Conta sem confirmação de email.", 401)
     }
 
     const expense = await prismaClient.expense.findFirst({
@@ -108,7 +108,7 @@ export class expenseController{
     })
 
     if(user?.isValidated === false){
-      throw new AppError("Conta sem confirmação de email.")
+      throw new AppError("Conta sem confirmação de email.", 401)
     }
 
     if(!expenses){

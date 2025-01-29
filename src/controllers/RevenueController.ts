@@ -29,7 +29,7 @@ interface revenueProps{
     })
 
     if(user?.isValidated === false){
-      throw new AppError("Conta sem confirmação de email.")
+      throw new AppError("Conta sem confirmação de email.", 401)
     }
 
 
@@ -59,7 +59,7 @@ interface revenueProps{
     })
 
     if(user?.isValidated === false){
-      throw new AppError("Conta sem confirmação de email.")
+      throw new AppError("Conta sem confirmação de email.", 401)
     }
     
     const revenue = await prismaClient.revenue.findFirst({
@@ -104,7 +104,7 @@ interface revenueProps{
     })
 
     if(user?.isValidated === false){
-      throw new AppError("Conta sem confirmação de email.")
+      throw new AppError("Conta sem confirmação de email.", 401)
     }
 
     const revenues = await prismaClient.revenue.findMany({
