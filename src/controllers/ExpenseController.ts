@@ -21,6 +21,16 @@ export class expenseController{
       throw new AppError("Preencha todos os campos.")
     }
 
+    const user = await prismaClient.user.findFirst({
+      where:{
+        id: userId
+      }
+    })
+
+    if(user?.isValidated === false){
+      throw new AppError("Conta sem confirmação de email.")
+    }
+
     const expense = await prismaClient.expense.create({
       data: {
         description,
@@ -39,6 +49,16 @@ export class expenseController{
     const userId = request.user.id
     const { id } = request.params as { id: string }
     const { description, value, dueDate } = request.body as expenseProps
+
+    const user = await prismaClient.user.findFirst({
+      where:{
+        id: userId
+      }
+    })
+
+    if(user?.isValidated === false){
+      throw new AppError("Conta sem confirmação de email.")
+    }
 
     const expense = await prismaClient.expense.findFirst({
       where:{
@@ -79,7 +99,17 @@ export class expenseController{
       where:{
         userId
       }
+    }) 
+
+    const user = await prismaClient.user.findFirst({
+      where:{
+        id: userId
+      }
     })
+
+    if(user?.isValidated === false){
+      throw new AppError("Conta sem confirmação de email.")
+    }
 
     if(!expenses){
       throw new AppError("Não há despesas cadastradas.")

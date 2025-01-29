@@ -22,6 +22,17 @@ interface revenueProps{
       throw new AppError("Preencha todos os campos.")
     }
 
+    const user = await prismaClient.user.findFirst({
+      where:{
+        id: userId
+      }
+    })
+
+    if(user?.isValidated === false){
+      throw new AppError("Conta sem confirmação de email.")
+    }
+
+
     const revenue = await prismaClient.revenue.create({
       data:{
         description,
@@ -41,6 +52,16 @@ interface revenueProps{
     const { id } = request.params as { id: string }
     const { description, value, dueDate } = request.body as revenueProps
 
+      const user = await prismaClient.user.findFirst({
+      where:{
+        id: userId
+      }
+    })
+
+    if(user?.isValidated === false){
+      throw new AppError("Conta sem confirmação de email.")
+    }
+    
     const revenue = await prismaClient.revenue.findFirst({
       where:{
         userId,
@@ -75,6 +96,16 @@ interface revenueProps{
     await ensureAuthenticated(request)
     
     const userId = request.user.id
+
+    const user = await prismaClient.user.findFirst({
+      where:{
+        id: userId
+      }
+    })
+
+    if(user?.isValidated === false){
+      throw new AppError("Conta sem confirmação de email.")
+    }
 
     const revenues = await prismaClient.revenue.findMany({
       where:{

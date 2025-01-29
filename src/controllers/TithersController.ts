@@ -14,6 +14,17 @@ export  class titherController{
       throw new AppError("Campo nome vazio, favor fornecer um nome.")
     }
 
+    const user = await prismaClient.user.findFirst({
+      where:{
+        id: userId
+      }
+    })
+
+    if(user?.isValidated === false){
+      throw new AppError("Conta sem confirmação de email.")
+    }
+
+
     const tither = await prismaClient.tithers.create({
       data: {
         name,
@@ -33,6 +44,16 @@ export  class titherController{
 
     if(!name){
       throw new AppError("Preencha todos os campos.")
+    }
+
+    const user = await prismaClient.user.findFirst({
+      where:{
+        id: userId
+      }
+    })
+
+    if(user?.isValidated === false){
+      throw new AppError("Conta sem confirmação de email.")
     }
 
     const tither = await prismaClient.tithers.findFirst({
@@ -65,6 +86,16 @@ export  class titherController{
     await ensureAuthenticated(request)
 
     const userId = request.user.id
+
+    const user = await prismaClient.user.findFirst({
+      where:{
+        id: userId
+      }
+    })
+
+    if(user?.isValidated === false){
+      throw new AppError("Conta sem confirmação de email.")
+    }
 
     const tithers = await prismaClient.tithers.findMany({
       where:{
