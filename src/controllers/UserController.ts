@@ -133,7 +133,7 @@ export class UserController{
       throw new AppError("Usuário não cadastrado.")
     }
 
-    const userUpdated = await prismaClient.user.update({
+    await prismaClient.user.update({
       where:{
         id: user.id
       },
@@ -143,7 +143,7 @@ export class UserController{
       }
     })
 
-    return reply.send(userUpdated)
+    return reply.send({"message": "conta verificada com sucesso!"})
   }
 
   async sendEmailResetPassword(request: FastifyRequest, reply: FastifyReply){

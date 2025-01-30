@@ -11,4 +11,7 @@ export async function expenseRoutes(expense: FastifyInstance){
   expense.get("/", (request: FastifyRequest, reply: FastifyReply) => {
     return new expenseController().index(request, reply)
   })
+  expense.delete("/:id", (request: FastifyRequest, reply:FastifyReply) => {
+      return new expenseController().delete(request, reply)
+    })
 }

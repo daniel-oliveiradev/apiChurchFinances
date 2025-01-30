@@ -11,4 +11,7 @@ export async function revenueRoutes(revenue: FastifyInstance){
   revenue.get("/", (request: FastifyRequest, reply: FastifyReply) => {
     return new revenueController().index(request, reply)
   })
+  revenue.delete("/:id", (request: FastifyRequest, reply:FastifyReply) => {
+      return new revenueController().delete(request, reply)
+    })
 }

@@ -13,4 +13,8 @@ export async function titherRoutes(tither: FastifyInstance){
   tither.get("/", (request:FastifyRequest, reply: FastifyReply) => {
     return new titherController().index(request, reply)
   })
+
+  tither.delete("/:id", (request: FastifyRequest, reply:FastifyReply) => {
+    return new titherController().delete(request, reply)
+  })
 }

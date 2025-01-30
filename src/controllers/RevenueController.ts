@@ -119,4 +119,39 @@ interface revenueProps{
 
     return reply.send({ ...revenues })
   }
+
+  async delete(request: FastifyRequest, reply: FastifyReply){
+    await ensureAuthenticated(request)
+
+    const userId = request.user.id
+    const { id } = request.params as { id: string }
+    
+    const user = await prismaClient.user.findFirst({
+      where:{
+        id: userId
+      }
+    })
+
+    if(user?.isValidated === false){
+      throw new AppError("Conta não verificada.")
+    }
+
+    const revenue = await prismaClient.revenue.findFirst({
+      where:{
+        id
+      }
+    })
+
+    if(!revenue){
+      throw new AppError("Receita não cadastrada")
+    }
+
+    await prismaClient.revenue.delete({
+      where:{
+        id
+      }
+    })
+    
+    return reply.send()
+  }
  }

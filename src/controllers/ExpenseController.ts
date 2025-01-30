@@ -117,4 +117,39 @@ export class expenseController{
 
     return reply.send({ ...expenses })
   }
+
+  async delete(request: FastifyRequest, reply: FastifyReply){
+    await ensureAuthenticated(request)
+
+    const userId = request.user.id
+    const { id } = request.params as { id: string }
+    
+    const user = await prismaClient.user.findFirst({
+      where:{
+        id: userId
+      }
+    })
+
+    if(user?.isValidated === false){
+      throw new AppError("Conta não verificada.")
+    }
+
+    const expense = await prismaClient.expense.findFirst({
+      where:{
+        id
+      }
+    })
+
+    if(!expense){
+      throw new AppError("Despesa não cadastrada.")
+    }
+
+    await prismaClient.expense.delete({
+      where:{
+        id
+      }
+    })
+    
+    return reply.send()
+  }
 }

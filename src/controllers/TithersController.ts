@@ -105,4 +105,39 @@ export  class titherController{
 
     reply.send([ ...tithers ])
   }
+
+  async delete(request: FastifyRequest, reply: FastifyReply){
+    await ensureAuthenticated(request)
+
+    const userId = request.user.id
+    const { id } = request.params as { id: string }
+    
+    const user = await prismaClient.user.findFirst({
+      where:{
+        id: userId
+      }
+    })
+
+    if(user?.isValidated === false){
+      throw new AppError("Conta não verificada.")
+    }
+
+    const tither = await prismaClient.tithers.findFirst({
+      where:{
+        id
+      }
+    })
+
+    if(!tither){
+      throw new AppError("Membro não cadastrado")
+    }
+
+    await prismaClient.tithers.delete({
+      where:{
+        id
+      }
+    })
+    
+    return reply.send()
+  }
 }
