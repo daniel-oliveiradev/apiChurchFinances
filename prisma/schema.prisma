@@ -8,53 +8,55 @@ datasource db {
 }
 
 model User {
-  id                 String               @id @default(uuid())
-  name               String
-  email              String               @unique
-  password           String
-  nickname           String               @unique
-  isAdmin            Boolean              @default(false)
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @default(now()) @updatedAt
-  validationId       String?              @default(uuid())
-  isValidated        Boolean?             @default(false)
-  expenses           Expense[]
-  revenues           Revenue[]
-  tithers            Tithers[]
-  revenueCategory    RevenueCategory[]
-  expenseCategory    ExpenseCategory[]
-  RevenueSubCategory RevenueSubCategory[]
-  ExpenseSubCategory ExpenseSubCategory[]
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  password     String
+  nickname     String        @unique
+  isAdmin      Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+  validationId String?       @default(uuid())
+  isValidated  Boolean?      @default(false)
+  expenses     Expense[]
+  revenues     Revenue[]
+  tithers      Tithers[]
+  Category     Category[]
+  SubCategory  SubCategory[]
 
   @@map("user")
 }
 
 model Expense {
-  id                 String               @id @default(uuid())
-  description        String
-  value              Float
-  dueDate            String
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @default(now()) @updatedAt
-  User               User?                @relation(fields: [userId], references: [id])
-  userId             String?
-  expenseCategory    ExpenseCategory[]
-  ExpenseSubCategory ExpenseSubCategory[]
+  id              String       @id @default(uuid())
+  description     String
+  value           Float
+  dueDate         String
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @default(now()) @updatedAt
+  User            User?        @relation(fields: [userId], references: [id])
+  userId          String?
+  Category        Category?    @relation(fields: [categoryName], references: [name])
+  categoryName    String?
+  SubCategory     SubCategory? @relation(fields: [subCategoryName], references: [name])
+  subCategoryName String?
 
   @@map("expense")
 }
 
 model Revenue {
-  id                 String               @id @default(uuid())
-  description        String
-  value              Float
-  dueDate            String
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @default(now()) @updatedAt
-  User               User?                @relation(fields: [userId], references: [id])
-  userId             String?
-  revenueCategory    RevenueCategory[]
-  revenueSubCategory RevenueSubCategory[]
+  id              String       @id @default(uuid())
+  description     String
+  value           Float
+  dueDate         String
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @default(now()) @updatedAt
+  User            User?        @relation(fields: [userId], references: [id])
+  userId          String?
+  Category        Category?    @relation(fields: [categoryName], references: [name])
+  categoryName    String?
+  SubCategory     SubCategory? @relation(fields: [subCategoryName], references: [name])
+  subCategoryName String?
 
   @@map("revenue")
 }
@@ -70,60 +72,31 @@ model Tithers {
   @@map("tithers")
 }
 
-model RevenueCategory {
-  id                 String               @id @default(uuid())
-  name               String
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @default(now()) @updatedAt
-  Revenue            Revenue?             @relation(fields: [revenueId], references: [id])
-  revenueId          String?
-  User               User?                @relation(fields: [userId], references: [id])
-  userId             String?
-  RevenueSubCategory RevenueSubCategory[]
+model Category {
+  id          String        @id @default(uuid())
+  name        String        @unique
+  type        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now()) @updatedAt
+  User        User?         @relation(fields: [userId], references: [id])
+  userId      String?
+  SubCategory SubCategory[]
+  Revenue     Revenue[]
+  Expense     Expense[]
 
-  @@map("revenueCategory")
+  @@map("category")
 }
 
-model ExpenseCategory {
-  id                 String               @id @default(uuid())
-  name               String
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @default(now()) @updatedAt
-  Expense            Expense?             @relation(fields: [expenseId], references: [id])
-  expenseId          String?
-  User               User?                @relation(fields: [userId], references: [id])
-  userId             String?
-  ExpenseSubCategory ExpenseSubCategory[]
-
-  @@map("expenseCategory")
-}
-
-model RevenueSubCategory {
-  id                String           @id @default(uuid())
-  name              String
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @default(now()) @updatedAt
-  Revenue           Revenue?         @relation(fields: [revenueId], references: [id])
-  revenueId         String?
-  User              User?            @relation(fields: [userId], references: [id])
-  userId            String?
-  RevenueCategory   RevenueCategory? @relation(fields: [revenueCategoryId], references: [id])
-  revenueCategoryId String?
-
-  @@map("revenueSubCategory")
-}
-
-model ExpenseSubCategory {
-  id                String           @id @default(uuid())
-  name              String
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @default(now()) @updatedAt
-  Expense           Expense?         @relation(fields: [expenseId], references: [id])
-  expenseId         String?
-  User              User?            @relation(fields: [userId], references: [id])
-  userId            String?
-  ExpenseCategory   ExpenseCategory? @relation(fields: [expenseCategoryId], references: [id])
-  expenseCategoryId String?
-
-  @@map("exepenseSubCategory")
+model SubCategory {
+  id         String    @id @default(uuid())
+  name       String    @unique
+  type       String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+  User       User?     @relation(fields: [userId], references: [id])
+  userId     String?
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+  Revenue    Revenue[]
+  Expense    Expense[]
 }
