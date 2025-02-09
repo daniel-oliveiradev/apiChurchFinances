@@ -5,7 +5,7 @@ import { ensureAuthenticated } from "../middleware/ensureAuthenticated";
 
 export class CategoryController{
   async create(request: FastifyRequest, reply:FastifyReply){
-    await ensureAuthenticated(request)
+    ensureAuthenticated(request)
 
     const userId = request.user.id
     const { name, type } = request.body as { name: string, type:string }
@@ -36,7 +36,7 @@ export class CategoryController{
   }
 
   async index(request: FastifyRequest, reply:FastifyReply){
-    await ensureAuthenticated(request)
+    ensureAuthenticated(request)
 
     const categories = await prismaClient.category.findMany()
 

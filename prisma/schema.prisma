@@ -28,35 +28,35 @@ model User {
 }
 
 model Expense {
-  id              String       @id @default(uuid())
-  description     String
-  value           Float
-  dueDate         String
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @default(now()) @updatedAt
-  User            User?        @relation(fields: [userId], references: [id])
-  userId          String?
-  Category        Category?    @relation(fields: [categoryName], references: [name])
-  categoryName    String?
-  SubCategory     SubCategory? @relation(fields: [subCategoryName], references: [name])
-  subCategoryName String?
+  id          String       @id @default(uuid())
+  description String
+  value       Float
+  dueDate     String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt
+  User        User?        @relation(fields: [userId], references: [id])
+  userId      String?
+  Category    Category?    @relation(fields: [category], references: [name])
+  category    String?
+  SubCategory SubCategory? @relation(fields: [subCategory], references: [name])
+  subCategory String?
 
   @@map("expense")
 }
 
 model Revenue {
-  id              String       @id @default(uuid())
-  description     String
-  value           Float
-  dueDate         String
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @default(now()) @updatedAt
-  User            User?        @relation(fields: [userId], references: [id])
-  userId          String?
-  Category        Category?    @relation(fields: [categoryName], references: [name])
-  categoryName    String?
-  SubCategory     SubCategory? @relation(fields: [subCategoryName], references: [name])
-  subCategoryName String?
+  id          String       @id @default(uuid())
+  description String
+  value       Float
+  dueDate     String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt
+  User        User?        @relation(fields: [userId], references: [id])
+  userId      String?
+  Category    Category?    @relation(fields: [category], references: [name])
+  category    String?
+  SubCategory SubCategory? @relation(fields: [subCategory], references: [name])
+  subCategory String?
 
   @@map("revenue")
 }
@@ -99,4 +99,6 @@ model SubCategory {
   categoryId String?
   Revenue    Revenue[]
   Expense    Expense[]
+
+  @@map("subCategory")
 }

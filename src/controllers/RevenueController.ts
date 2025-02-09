@@ -8,7 +8,8 @@ interface revenueProps{
   description: string
   value: number
   dueDate: string
-  userId: string
+  category: string
+  subCategory: string
 }
 
  export class revenueController{
@@ -16,28 +17,55 @@ interface revenueProps{
     await ensureAuthenticated(request)
     
     const userId = request.user.id
-    const { description, value, dueDate } = request.body as revenueProps
+    const { description, value, dueDate, category, subCategory } = request.body as revenueProps
 
-    if(!description || !value || !dueDate ){
-      throw new AppError("Preencha todos os campos.")
-    }
-
+    
     const user = await prismaClient.user.findFirst({
       where:{
         id: userId
       }
     })
-
+    
     if(user?.isValidated === false){
       throw new AppError("Conta sem confirmação de email.", 401)
     }
+    
+    if(!description || !value || !dueDate || !category){
+      throw new AppError("Preencha todos os campos.")
+    }
 
+    const checkIfCategoryExists = await prismaClient.category.findFirst({
+      where: {
+        name: category
+      }
+    })
+
+    if(!checkIfCategoryExists){
+      throw new AppError("Categoria informada não cadastrada.")
+    }
+
+    if(subCategory){
+      const revenue = await prismaClient.revenue.create({
+        data:{
+          description,
+          value,
+          dueDate,
+          category,
+          subCategory,
+          userId
+        }
+      })
+
+      return reply.status(201).send(revenue)
+    }
 
     const revenue = await prismaClient.revenue.create({
       data:{
         description,
         value,
         dueDate,
+        category,
+        subCategory: "",
         userId
       }
     })
@@ -50,9 +78,9 @@ interface revenueProps{
     
     const userId = request.user.id
     const { id } = request.params as { id: string }
-    const { description, value, dueDate } = request.body as revenueProps
+    const { description, value, dueDate, category, subCategory } = request.body as revenueProps
 
-      const user = await prismaClient.user.findFirst({
+    const user = await prismaClient.user.findFirst({
       where:{
         id: userId
       }
@@ -61,10 +89,33 @@ interface revenueProps{
     if(user?.isValidated === false){
       throw new AppError("Conta sem confirmação de email.", 401)
     }
+
+    if(!description || !value || !dueDate || !category || !subCategory ){
+      throw new AppError("Preencha todos os campos.")
+    }
     
+    const checkIfCategoryExists = await prismaClient.category.findFirst({
+      where: {
+        name: category
+      }
+    })
+
+    if(!checkIfCategoryExists){
+      throw new AppError("Categoria informada não cadastrada.")
+    }
+
+    const checkIfSubCategoryExists = await prismaClient.subCategory.findFirst({
+      where: {
+        name: subCategory
+      }
+    })
+
+    if(!checkIfSubCategoryExists){
+      throw new AppError("Sub categoria informada não cadastrada.")
+    }
+
     const revenue = await prismaClient.revenue.findFirst({
       where:{
-        userId,
         id
       }
     })
@@ -76,6 +127,8 @@ interface revenueProps{
     revenue.description = description ?? revenue.description
     revenue.value = value ?? revenue.value
     revenue.dueDate = dueDate ?? revenue.dueDate
+    revenue.category = category ?? revenue.category
+    revenue.subCategory = subCategory ?? revenue.subCategory
 
     const revenueUpdated = await prismaClient.revenue.update({
       where:{
@@ -85,6 +138,8 @@ interface revenueProps{
         description:revenue.description,
         value:revenue.value,
         dueDate:revenue.dueDate,
+        category: revenue.category,
+        subCategory: revenue.subCategory,
         updatedAt: new Date()
       }
     })
@@ -107,17 +162,13 @@ interface revenueProps{
       throw new AppError("Conta sem confirmação de email.", 401)
     }
 
-    const revenues = await prismaClient.revenue.findMany({
-      where:{
-        userId
-      }
-    })
+    const revenues = await prismaClient.revenue.findMany()
 
     if(!revenues){
       throw new AppError("Não há receitas cadastradas")
     }
 
-    return reply.send({ ...revenues })
+    return reply.send([ ...revenues ])
   }
 
   async delete(request: FastifyRequest, reply: FastifyReply){
@@ -152,6 +203,6 @@ interface revenueProps{
       }
     })
     
-    return reply.send()
+    return reply.send({"message": "Receita excluída com sucesso!"})
   }
  }

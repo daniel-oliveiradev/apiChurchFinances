@@ -6,6 +6,7 @@ import { revenueRoutes } from "./RevenueRoutes";
 import { titherRoutes } from "./TitherRoutes";
 import { sessionRoutes } from "./SessionRoutes";
 import { categoryRoutes } from "./CategoryRoutes";
+import { subCategoryRoutes } from "./SubCategoryRoutes";
 
 export function routes(fastify: FastifyInstance){
   fastify.register(userRoutes, {prefix: "/user"})
@@ -14,4 +15,5 @@ export function routes(fastify: FastifyInstance){
   fastify.register(titherRoutes, {prefix: "/tithers"})
   fastify.register(sessionRoutes, {prefix: "/session"})
   fastify.register(categoryRoutes, {prefix: "/category"})
+  fastify.register(subCategoryRoutes, {prefix: "/subcategory"})
 }
