@@ -42,4 +42,28 @@ export class CategoryController{
 
     reply.status(201).send([ ...categories ])
   }
+
+  async delete(request: FastifyRequest, reply: FastifyReply){
+    ensureAuthenticated(request)
+
+    const { categoryId } = request.params as { categoryId: string }
+
+    const category = await prismaClient.category.findFirst({
+      where:{
+        id: categoryId
+      }
+    })
+
+    if(!category){
+      throw new AppError("Categoria não encontrada.")
+    }
+
+    await prismaClient.category.delete({
+      where: {
+        id: category.id
+      }
+    })
+
+    return reply.send()
+  }
 }

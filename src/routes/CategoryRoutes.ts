@@ -9,4 +9,8 @@ export async function categoryRoutes(category: FastifyInstance){
   category.get("/", (request: FastifyRequest, reply: FastifyReply) => {
     return new CategoryController().index(request, reply)
   })
+
+  category.delete("/:id", (request: FastifyRequest, reply: FastifyReply) => {
+    return new CategoryController().delete(request, reply)
+  })
 }

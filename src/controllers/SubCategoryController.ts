@@ -15,12 +15,23 @@ export class SubCategoryController{
       throw new AppError("Preencha todos os campos.")
     }
 
+    const category = await prismaClient.category.findFirst({
+      where:{
+        id: categoryId
+      }
+    })
+
+    if(!category){
+      throw new AppError("Categoria não cadastrada.")
+    }
+
+
     const subCategory = await prismaClient.subCategory.create({
       data:{
         name,
         type,
         userId,
-        categoryId
+        categoryId: category.id
       }
     })
 
@@ -33,5 +44,29 @@ export class SubCategoryController{
     const subCategories = await prismaClient.subCategory.findMany()
 
     return reply.status(201).send([ ...subCategories ])
+  }
+
+  async delete(request: FastifyRequest, reply: FastifyReply){
+    ensureAuthenticated(request)
+
+    const {subCategoryId } = request.params as { subCategoryId: string}
+
+    const subCategory = await prismaClient.subCategory.findFirst({
+      where:{
+        id: subCategoryId
+      }
+    })
+
+    if(!subCategory){
+      throw new AppError("Sub-categoria não cadastrada.")
+    }
+
+    await prismaClient.subCategory.delete({
+      where:{
+        id: subCategory.id
+      }
+    })
+
+    return reply.send()
   }
 } 
